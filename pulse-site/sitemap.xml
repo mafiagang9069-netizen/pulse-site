@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://www.pulse-news.example/index.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://www.pulse-news.example/about.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://www.pulse-news.example/contact.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://www.pulse-news.example/privacy.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://www.pulse-news.example/terms.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://www.pulse-news.example/search.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://www.pulse-news.example/categories/technology.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://www.pulse-news.example/categories/work-culture.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://www.pulse-news.example/categories/climate.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://www.pulse-news.example/categories/health.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://www.pulse-news.example/categories/business.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://www.pulse-news.example/categories/science.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://www.pulse-news.example/categories/food.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://www.pulse-news.example/categories/lifestyle.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://www.pulse-news.example/categories/finance.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://www.pulse-news.example/authors/maya-chen.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://www.pulse-news.example/authors/daniel-osei.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://www.pulse-news.example/authors/priya-nair.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://www.pulse-news.example/articles/ai-agents-boring-parts-of-your-job.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://www.pulse-news.example/articles/four-day-week-no-longer-experiment.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://www.pulse-news.example/articles/direct-air-capture-gets-cheap.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://www.pulse-news.example/articles/longevity-research-what-works.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://www.pulse-news.example/articles/paid-newsletters-outearn-display-ads.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://www.pulse-news.example/articles/sodium-ion-batteries-second-contender.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://www.pulse-news.example/articles/mental-health-apps-regulatory-reckoning.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://www.pulse-news.example/articles/private-space-stations-real-hardware.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://www.pulse-news.example/articles/ai-phishing-emails-getting-good.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://www.pulse-news.example/articles/return-to-office-mandates-talent-market.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://www.pulse-news.example/articles/precision-fermented-proteins-quiet-second-act.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://www.pulse-news.example/articles/slow-travel-winning-bucket-list-trip.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://www.pulse-news.example/articles/cloud-gaming-stopped-feeling-compromise.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://www.pulse-news.example/articles/fire-movement-rebranding-flexibility.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://www.pulse-news.example/articles/wearables-predicting-illness-early.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://www.pulse-news.example/articles/secondhand-fashion-market-too-big-to-ignore.html</loc><changefreq>weekly</changefreq></url>
+</urlset>
