@@ -125,33 +125,52 @@ export default function AdminArticleEditor() {
     }, 50);
   };
 
-  // Image Upload Handler
-  const handleImageFileChange = async (e) => {
+  // 100% Free Image Upload Handler (No Firebase Storage billing account needed!)
+  const handleImageFileChange = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (!isFirebaseConfigured) {
-      // Local preview simulation
-      const previewUrl = URL.createObjectURL(file);
-      setFormData(prev => ({ ...prev, featuredImage: previewUrl }));
-      setFeedback({ type: "info", message: "Local image selected for preview. (Firebase Storage upload connects when Firebase credentials are configured in .env)." });
-      return;
-    }
-
     setUploadingImage(true);
-    setUploadProgress(0);
+    setUploadProgress(30);
 
-    try {
-      const downloadUrl = await uploadImage(file, "articles", (prog) => {
-        setUploadProgress(prog);
-      });
-      setFormData(prev => ({ ...prev, featuredImage: downloadUrl }));
-      setFeedback({ type: "success", message: "Image uploaded to Firebase Storage successfully!" });
-    } catch (err) {
-      setFeedback({ type: "error", message: "Image upload failed: " + err.message });
-    } finally {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setUploadProgress(70);
+      const img = new Image();
+      img.onload = () => {
+        // Optimize and compress image on canvas so it fits cleanly in Firestore for FREE
+        const canvas = document.createElement("canvas");
+        const MAX_WIDTH = 1200;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > MAX_WIDTH) {
+          height = Math.round((height * MAX_WIDTH) / width);
+          width = MAX_WIDTH;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, width, height);
+
+        const optimizedDataUrl = canvas.toDataURL("image/jpeg", 0.78);
+        setFormData(prev => ({ ...prev, featuredImage: optimizedDataUrl }));
+        setUploadProgress(100);
+        setUploadingImage(false);
+        setFeedback({ 
+          type: "success", 
+          message: "Image compressed and saved for 100% FREE — no paid Firebase Storage plan required!" 
+        });
+      };
+      img.src = event.target.result;
+    };
+    reader.onerror = () => {
       setUploadingImage(false);
-    }
+      setFeedback({ type: "error", message: "Failed to read image file." });
+    };
+    reader.readAsDataURL(file);
   };
 
   // Save / Publish
@@ -541,7 +560,12 @@ export default function AdminArticleEditor() {
 
           {/* Featured Editorial Photograph Card */}
           <div className="bg-white dark:bg-[#181B22] p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 shadow-sm space-y-4">
-            <h3 className="font-serif text-lg font-bold">Featured Image</h3>
+            <div className="flex items-center justify-between">
+              <h3 className="font-serif text-lg font-bold">Featured Image</h3>
+              <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded">
+                100% Free
+              </span>
+            </div>
 
             {formData.featuredImage && (
               <div className="aspect-[16/9] rounded-lg overflow-hidden bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 relative">
@@ -553,9 +577,48 @@ export default function AdminArticleEditor() {
               </div>
             )}
 
+            {/* Free Quick Presets */}
+            <div>
+              <span className="block text-[11px] font-mono uppercase text-neutral-400 mb-1.5">
+                Quick Free Editorial Presets:
+              </span>
+              <div className="flex flex-wrap gap-1.5">
+                {[
+                  { label: "Tech / AI", url: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=85" },
+                  { label: "Space", url: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1400&q=85" },
+                  { label: "Business", url: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1400&q=85" },
+                  { label: "Health", url: "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=1400&q=85" },
+                  { label: "Climate", url: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1400&q=85" },
+                  { label: "Culture", url: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1400&q=85" }
+                ].map((preset) => (
+                  <button
+                    key={preset.label}
+                    type="button"
+                    onClick={() => setFormData(prev => ({ ...prev, featuredImage: preset.url }))}
+                    className="text-[10px] font-mono px-2 py-1 rounded bg-[#F1F2F4] dark:bg-[#12141A] text-neutral-700 dark:text-neutral-300 hover:bg-[#315CF5] hover:text-white transition-colors"
+                  >
+                    {preset.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <div>
               <label className="block text-xs font-mono uppercase text-neutral-500 mb-1">
-                Upload New Image (Firebase Storage)
+                Image URL (Unsplash, Pexels, Web)
+              </label>
+              <input
+                type="url"
+                value={formData.featuredImage}
+                onChange={(e) => setFormData({ ...formData, featuredImage: e.target.value })}
+                placeholder="https://images.unsplash.com/..."
+                className="w-full px-3 py-2 rounded-lg bg-[#FAFAF8] dark:bg-[#0F1115] border border-neutral-300 dark:border-neutral-700 text-xs focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-mono uppercase text-neutral-500 mb-1">
+                Or Upload from Computer (Free Auto-Compression)
               </label>
               <input
                 type="file"
@@ -565,23 +628,13 @@ export default function AdminArticleEditor() {
                 className="w-full text-xs text-neutral-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-mono file:bg-[#315CF5] file:text-white hover:file:bg-[#2046DB] file:cursor-pointer"
               />
               {uploadingImage && (
-                <div className="mt-2 text-xs font-mono text-[#315CF5]">
-                  Uploading... {uploadProgress}%
+                <div className="mt-1.5 text-xs font-mono text-[#315CF5]">
+                  Optimizing photo... {uploadProgress}%
                 </div>
               )}
-            </div>
-
-            <div>
-              <label className="block text-xs font-mono uppercase text-neutral-500 mb-1">
-                Or Direct Image URL
-              </label>
-              <input
-                type="url"
-                value={formData.featuredImage}
-                onChange={(e) => setFormData({ ...formData, featuredImage: e.target.value })}
-                placeholder="https://images.unsplash.com/..."
-                className="w-full px-3 py-2 rounded-lg bg-[#FAFAF8] dark:bg-[#0F1115] border border-neutral-300 dark:border-neutral-700 text-xs focus:outline-none"
-              />
+              <span className="block text-[10px] text-neutral-400 mt-1">
+                Optimized automatically for Cloud Firestore — no paid Blaze storage account required.
+              </span>
             </div>
           </div>
 

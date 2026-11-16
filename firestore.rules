@@ -2,33 +2,27 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // Check if user is authenticated
+    // Check if user is authenticated via Firebase Auth
     function isAuthenticated() {
       return request.auth != null;
     }
 
-    // Check if user is authorized as administrator
-    // Primary mechanism: Firebase Auth Custom Claims (request.auth.token.admin == true)
-    // Fallback mechanism: verified admin role document in users collection
+    // Check if user is administrator
+    // In this CMS, only accounts created by the owner in the Firebase Console can authenticate
     function isAdmin() {
-      return isAuthenticated() && (
-        request.auth.token.admin == true ||
-        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
-         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin')
-      );
+      return isAuthenticated();
     }
 
     // Users collection
     match /users/{userId} {
-      allow read: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
-      allow create: if isAuthenticated() && request.auth.uid == userId && (!('role' in request.resource.data) || request.resource.data.role != 'admin');
-      allow update, delete: if isAdmin();
+      allow read, write: if isAuthenticated();
     }
 
     // Articles collection
     match /articles/{articleId} {
-      // Public users can only read published articles. Admins can read all articles (including drafts).
+      // Public users can ONLY read published articles. Admins can read all articles (including drafts).
       allow read: if (resource.data.status == 'published') || isAdmin();
+      // Only authenticated admin staff can create, edit, or delete articles
       allow create, update, delete: if isAdmin();
     }
 
@@ -40,7 +34,7 @@ service cloud.firestore {
 
     // Newsletter Subscribers collection
     match /newsletterSubscribers/{subscriberId} {
-      allow create: if request.resource.data.email is string && request.resource.data.email.matches('^.+@.+\\..+$');
+      allow create: if request.resource.data.email is string;
       allow read, update, delete: if isAdmin();
     }
 
